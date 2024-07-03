@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
 
@@ -31,19 +32,27 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user= $request->user();
         $data = [
             ...parent::share($request),
             'auth' => [
-                'user' => $request->user(),
+                'user' => $user,
             ],
-            'testShare' => 'test123123', // Use consistent naming convention (camelCase)
+            'testShare' => 'test123123',
+            // 'success','error' this is type of message
+            'message'=>collect(Arr::only($request->session()->all(),['success','error']))->mapWithKeys(
+                function ($body, $key) {
+                    return [
+                        'type'=>$key,
+                        'body'=>$body,
+                    ];
+                }
+            ),
+            'can'=>  [
+                'post_create' => $user && auth()->user()->can('create', Post::class),
+            ]
         ];
 
-        if (Auth::check()) {
-            $data['can'] = [
-                'post_create' => auth()->user()->can('create', Post::class),
-            ];
-        }
 
         return $data;
     }

@@ -26,12 +26,7 @@ export default function Index({ auth, posts,testShare}) {
 
     }
 const pageIndex= usePage();
-    useEffect(() => {
-        if (pageIndex?.props?.notification?.msg) {
-            const { msg, type } = pageIndex.message;
-            toast(msg, { type:type ,  position: "bottom-center"});
-        }
-    }, [pageIndex.props.notification]);
+
     return (
         <AuthenticatedLayout
             user={auth.user}
