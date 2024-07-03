@@ -19,7 +19,7 @@ class PostsController extends Controller
     public function store(PostRequest $request)
     {
         auth()->user()->posts()->create($request->validated());
-        return redirect('posts')->with('notification',[
+        return to_route('posts.index')->with('notification',[
             'type' => 'success',
             'msg' => 'Post Created Successfully'
         ]);

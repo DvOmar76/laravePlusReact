@@ -1,11 +1,11 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import {Head, useForm, router, Link, usePage} from '@inertiajs/react';
+import {Head, useForm, router, Link, usePage, useRemember} from '@inertiajs/react';
 import toast from "react-hot-toast";
 import {useEffect} from "react";
 
-export default function Index({ auth, posts,testShare }) {
+export default function Index({ auth, posts,testShare}) {
 
-    const { data, setData, post, processing, errors,reset ,clearErrors,progress}  = useForm('StorePost',{
+    const { data, setData, post, processing, errors,status,reset ,clearErrors,progress}  = useForm('StorePost',{
         body: '',
     });
     function submit(e) {
@@ -20,7 +20,8 @@ export default function Index({ auth, posts,testShare }) {
     function refreshPosts(){
         router.get(route('posts.index'),{},{
             only:['posts'],
-            preserveScroll:true
+            preserveScroll:true,
+            preserveState:true
         })
 
     }
@@ -50,32 +51,37 @@ const pageIndex= usePage();
                         <div className="p-6 text-gray-900">posts index</div>
                         {data.body}
                         <div className="p-6 text-gray-900 space-y-6">
-                            <form id={'StorePost'} name={'StorePost'} onSubmit={submit}>
-                                <label htmlFor={'body'}>body</label>
-                                <textarea
-                                    onChange={(e) => setData('body', e.target.value)}
-                                    onFocus={() => {
-                                        clearErrors('body')
-                                    }}
-                                    name="body"
-                                    id="body"
-                                    rows="4"
-                                    cols="4"
-                                    value={data.body}
-                                    className="w-full h-full"
-                                />
-                                {errors.body && <div className={'text-red-600'}>{errors.body}</div>}
-                                <button
-                                    disabled={processing}
-                                    className='bg-blue-200 rounded p-1 text-center' type="submit">
-                                    {processing ? "loading ..." : 'post'}
+                            {pageIndex.props.can?.post_create &&
+                                <form id={'StorePost'} name={'StorePost'} onSubmit={submit}>
+                                    <label htmlFor={'body'}>body</label>
+                                    <textarea
+                                        onChange={(e) => setData('body', e.target.value)}
+                                        onFocus={() => {
+                                            clearErrors('body')
+                                        }}
+                                        name="body"
+                                        id="body"
+                                        key={1}
+                                        rows="4"
+                                        cols="4"
+                                        value={data.body}
+                                        className="w-full h-full"
+                                    />
+                                    {errors.body && <div className={'text-red-600'}>{errors.body}</div>}
+                                    <button
+                                        disabled={processing}
+                                        className='bg-blue-200 rounded p-1 text-center' type="submit">
+                                        {processing ? "loading ..." : 'post'}
 
-                                </button>
-                            </form>
+                                    </button>
+                                </form>
+
+                            }
                         </div>
                         <div className={'space-y-6'}>
-                            {/*<button className={'bg-black p-1 rounded text-white'} onClick={refreshPosts}>refresh</button>*/}
-                            <Link hrfe={route('posts.index')} only={['posts']}>refresh</Link>
+                            <button className={'bg-black p-1 rounded text-white'} onClick={refreshPosts}>refresh
+                            </button>
+                            {/*<Link hrfe={route('posts.index')} only={['posts']} >refresh</Link>*/}
                         </div>
                         {posts.data.map((post) => (
                             <div key={post.id}>
