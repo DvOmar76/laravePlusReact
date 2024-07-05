@@ -52,8 +52,6 @@ class HandleInertiaRequests extends Middleware
                 'post_create' => $user && auth()->user()->can('create', Post::class),
             ]
         ];
-
-
         return $data;
     }
 }

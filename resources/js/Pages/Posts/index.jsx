@@ -3,29 +3,32 @@ import {Head, useForm, router, Link, usePage, useRemember} from '@inertiajs/reac
 import toast from "react-hot-toast";
 import {useEffect} from "react";
 
-export default function Index({ auth, posts,testShare}) {
+export default function Index({auth, posts, testShare}) {
 
-    const { data, setData, post, processing, errors,status,reset ,clearErrors,progress}  = useForm('StorePost',{
+    const {data, setData, post, processing, errors, status, reset, clearErrors, progress} = useForm('StorePost', {
         body: '',
     });
+
     function submit(e) {
         e.preventDefault()
-        post(route('posts.store'),{
-            onSuccess:()=>{
+        post(route('posts.store'), {
+            onSuccess: () => {
                 reset('body')
             },
 
-        }) ;
+        });
     }
-    function refreshPosts(){
-        router.get(route('posts.index'),{},{
-            only:['posts'],
-            preserveScroll:true,
-            preserveState:true
+
+    function refreshPosts() {
+        router.get(route('posts.index'), {}, {
+            only: ['posts'],
+            preserveScroll: true,
+            preserveState: true
         })
 
     }
-const pageIndex= usePage();
+
+    const pageIndex = usePage();
 
     return (
         <AuthenticatedLayout
@@ -33,12 +36,12 @@ const pageIndex= usePage();
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">posts</h2>}
         >
             <Head title="posts">
-                <meta name="description" content="posts index" />
+                <meta name="description" content="posts index"/>
             </Head>
 
             <div className="py-12">
                 <p className={'p-6 text-gray-900'}>
-                   test share : {testShare}
+                    test share : {testShare}
                     test notification: {pageIndex?.props?.notification?.msg}
                 </p>
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">

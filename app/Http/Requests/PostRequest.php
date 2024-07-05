@@ -13,6 +13,7 @@ class PostRequest extends FormRequest
      */
     public function authorize(): bool
     {
+//        abort(403);
         return auth()->check() && Gate::allows('create', Post::class);
     }
 
